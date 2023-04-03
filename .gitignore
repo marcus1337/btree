@@ -1,0 +1,5 @@
+build/
+examples/out/
+out/
+.vs/
+examples/.vs/
