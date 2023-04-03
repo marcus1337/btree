@@ -4,6 +4,8 @@ set (CMAKE_CXX_STANDARD 20)
 
 add_library(${PROJECT_NAME} STATIC
 "src/BehaviorTree.cpp"
+"src/CompositeNode.cpp"
+"src/Task.cpp"
 )
 
 target_include_directories(${PROJECT_NAME}
