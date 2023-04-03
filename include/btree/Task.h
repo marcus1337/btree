@@ -10,13 +10,15 @@ namespace bt {
         std::string name;
         std::function<bool()> condition;
         std::function<TaskStatus()> action;
+        bool isCondition() const;
+        bool isAction() const;
     public:
         Task(std::string name, std::function<bool()> condition);
         Task(std::string name, std::function<TaskStatus()> action);
-        std::string getName() const;
+        virtual std::string getName() const override;
         virtual TaskStatus tick() override;
-        bool isCondition() const;
-        bool isAction() const;
+        virtual std::vector<Node*> getChildren() const override;
+        virtual NodeType getType() const override;
     };
 }
 

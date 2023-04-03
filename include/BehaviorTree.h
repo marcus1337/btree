@@ -7,6 +7,7 @@
 
 namespace bt {
     class BehaviorTree {
+        std::shared_ptr<Node> root;
 
     public:
 

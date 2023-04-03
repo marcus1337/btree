@@ -28,3 +28,14 @@ bool Task::isCondition() const {
 bool Task::isAction() const {
     return static_cast<bool>(action);
 }
+
+std::vector<Node*> Task::getChildren() const {
+    return {};
+}
+
+NodeType Task::getType() const {
+    if (isAction())
+        return NodeType::ACTION;
+    else
+        return NodeType::CONDITION;
+}

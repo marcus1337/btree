@@ -10,18 +10,20 @@ namespace bt {
     class CompositeNode : public Node {
     protected:
         std::vector<std::shared_ptr<Node>> children;
-        int nextChildIndex = 0;
     public:
         virtual TaskStatus tick() = 0;
         void addChild(std::shared_ptr<Node> node);
+        virtual std::vector<Node*> getChildren() const override;
     };
 
     class Selector : public CompositeNode {
         virtual TaskStatus tick();
+        virtual NodeType getType() const override;
     };
 
     class Sequence : public CompositeNode {
         virtual TaskStatus tick();
+        virtual NodeType getType() const override;
     };
 }
 

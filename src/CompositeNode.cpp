@@ -6,15 +6,21 @@ void CompositeNode::addChild(std::shared_ptr<Node> node) {
     children.push_back(node);
 }
 
+std::vector<Node*> CompositeNode::getChildren() const {
+    std::vector<Node*> nodes;
+    for (std::shared_ptr<Node> child : children) {
+        nodes.push_back(child.get());
+    }
+    return nodes;
+}
+
 TaskStatus Selector::tick() {
-    for (int i = nextChildIndex; i < children.size(); i++) {
-        auto result = children[i]->tick();
+    for (int i = 0; i < children.size(); i++) {
+        auto result = children[i]->statefulTick();
         if (result == TaskStatus::RUNNING) {
-            nextChildIndex = i;
             return result;
         }
         else if (result == TaskStatus::SUCCESS) {
-            nextChildIndex = 0;
             return result;
         }
     }
@@ -22,17 +28,22 @@ TaskStatus Selector::tick() {
 }
 
 TaskStatus Sequence::tick() {
-    for (int i = nextChildIndex; i < children.size(); i++) {
-        auto result = children[i]->tick();
+    for (int i = 0; i < children.size(); i++) {
+        auto result = children[i]->statefulTick();
         if (result == TaskStatus::RUNNING) {
-            nextChildIndex = i;
             return result;
         }
         else if (result == TaskStatus::FAIL) {
-            nextChildIndex = 0;
             return result;
         }
     }
-    nextChildIndex = 0;
     return TaskStatus::SUCCESS;
+}
+
+NodeType Sequence::getType() const {
+    return NodeType::SEQUENCE;
+}
+
+NodeType Selector::getType() const {
+    return NodeType::SELECTOR;
 }
