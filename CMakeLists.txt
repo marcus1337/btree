@@ -7,7 +7,7 @@ add_library(${PROJECT_NAME} STATIC
 "src/Composite.cpp"
 "src/Task.cpp"
 "src/Node.cpp" 
-"src/BehaviorTreeBuilder.cpp")
+"src/BehaviorTreeBuilder.cpp" "src/BehaviorTreeMutater.cpp")
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC
