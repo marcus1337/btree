@@ -25,11 +25,13 @@ namespace bt {
     class Selector : public Composite {
         virtual TaskStatus tick();
         virtual NodeType getType() const override;
+        virtual std::shared_ptr<Node> clone() const override;
     };
 
     class Sequence : public Composite {
         virtual TaskStatus tick();
         virtual NodeType getType() const override;
+        virtual std::shared_ptr<Node> clone() const override;
     };
 }
 

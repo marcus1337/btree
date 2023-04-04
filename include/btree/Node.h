@@ -3,6 +3,7 @@
 #include "TaskStatus.h"
 #include <vector>
 #include <string>
+#include <memory>
 
 namespace bt {
     enum class NodeType {
@@ -23,6 +24,7 @@ namespace bt {
         virtual NodeType getType() const = 0;
         virtual std::string getName() const;
         virtual std::vector<Node*> getChildren() const = 0;
+        virtual std::shared_ptr<Node> clone() const = 0;
     };
 }
 

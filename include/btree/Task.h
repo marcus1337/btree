@@ -19,6 +19,7 @@ namespace bt {
         virtual TaskStatus tick() override;
         virtual std::vector<Node*> getChildren() const override;
         virtual NodeType getType() const override;
+        virtual std::shared_ptr<Node> clone() const override;
     };
 }
 

@@ -9,6 +9,14 @@ BehaviorTree::BehaviorTree() {
     root = std::shared_ptr<Composite>(new Sequence());
 }
 
+BehaviorTree BehaviorTree::clone() const {
+    BehaviorTree tree;
+    for (const auto& child : root->getChildren()) {
+        tree.getRoot()->addChild(child->clone());
+    }
+    return tree;
+}
+
 std::shared_ptr<Composite> BehaviorTree::getRoot() const {
     return root;
 }

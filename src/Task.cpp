@@ -39,3 +39,12 @@ NodeType Task::getType() const {
     else
         return NodeType::CONDITION;
 }
+
+std::shared_ptr<Node> Task::clone() const {
+    if (isAction()) {
+        return std::shared_ptr<Task>(new Task(getName(), action));
+    }
+    else {
+        return std::shared_ptr<Task>(new Task(getName(), condition));
+    }
+}

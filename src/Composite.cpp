@@ -67,3 +67,19 @@ NodeType Sequence::getType() const {
 NodeType Selector::getType() const {
     return NodeType::SELECTOR;
 }
+
+std::shared_ptr<Node> Sequence::clone() const {
+    std::shared_ptr<Sequence> node = std::make_shared<Sequence>();
+    for (const auto& child : getChildren()) {
+        node->addChild(child->clone());
+    }
+    return node;
+}
+
+std::shared_ptr<Node> Selector::clone() const {
+    std::shared_ptr<Selector> node = std::make_shared<Selector>();
+    for (const auto& child : getChildren()) {
+        node->addChild(child->clone());
+    }
+    return node;
+}
