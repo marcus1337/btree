@@ -19,6 +19,7 @@ int main(int argc, char* argv[]) {
         .build();
 
     tree.print();
+    std::cout << "Num composites: " << tree.getComposites().size() << "\n";
 
     return 0;
 }

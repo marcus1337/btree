@@ -9,8 +9,19 @@ BehaviorTree::BehaviorTree() {
     root = std::shared_ptr<Composite>(new Sequence());
 }
 
-std::shared_ptr<Composite> BehaviorTree::getRoot() {
+std::shared_ptr<Composite> BehaviorTree::getRoot() const {
     return root;
+}
+
+std::vector<Composite*> BehaviorTree::getComposites() const {
+    std::vector<Composite*> result;
+    for (Node* child : getNodes()) {
+        auto compositeChild = dynamic_cast<Composite*>(child);
+        if (compositeChild != nullptr) {
+            result.push_back(compositeChild);
+        }
+    }
+    return result;
 }
 
 void BehaviorTree::reset() {
@@ -20,10 +31,17 @@ void BehaviorTree::reset() {
 }
 
 TaskStatus BehaviorTree::tick() {
+    auto status = root->statefulTick();
+    if(status != TaskStatus::RUNNING)
+        reset();
+    return status;
+}
+
+TaskStatus BehaviorTree::statefulTick() {
     return root->statefulTick();
 }
 
-std::vector<std::pair<int, Node*>> BehaviorTree::getNodesDFS() {
+std::vector<std::pair<int, Node*>> BehaviorTree::getNodesDFS() const {
     std::vector<std::pair<int, Node*>> nodes;
     std::function<void(std::pair<int, Node*>)> addNode = [&](std::pair<int, Node*> depthAndNode) {
         nodes.push_back(depthAndNode);
@@ -36,7 +54,7 @@ std::vector<std::pair<int, Node*>> BehaviorTree::getNodesDFS() {
     return nodes;
 }
 
-std::vector<Node*> BehaviorTree::getNodes() {
+std::vector<Node*> BehaviorTree::getNodes() const {
     std::vector<Node*> nodes;
     std::function<void(Node*)> addNode = [&](Node* node) {
         nodes.push_back(node);
@@ -47,7 +65,7 @@ std::vector<Node*> BehaviorTree::getNodes() {
     return nodes;
 }
 
-void BehaviorTree::print() {
+void BehaviorTree::print() const {
     for (auto [depth, node] : getNodesDFS()) {
         for (int i = 0; i < depth; i++) {
             std::cout << "   ";

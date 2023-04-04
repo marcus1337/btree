@@ -15,6 +15,9 @@ namespace bt {
         void addChild(std::shared_ptr<Node> node);
         void insertChild(std::shared_ptr<Node> node, int index);
         void removeChild(int index);
+        void replaceChild(std::shared_ptr<Node> node, int index);
+        void swapChildren(int index1, int index2);
+
         virtual std::vector<Node*> getChildren() const override;
         int getNumChildren() const;
     };

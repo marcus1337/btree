@@ -14,6 +14,14 @@ void Composite::removeChild(int index) {
     children.erase(children.begin() + index);
 }
 
+void Composite::replaceChild(std::shared_ptr<Node> node, int index) {
+    children[index] = node;
+}
+
+void Composite::swapChildren(int index1, int index2) {
+    std::swap(children[index1], children[index2]);
+}
+
 std::vector<Node*> Composite::getChildren() const {
     std::vector<Node*> nodes;
     for (std::shared_ptr<Node> child : children) {
