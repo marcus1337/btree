@@ -8,12 +8,12 @@
 namespace bt {
     class BehaviorTree {
         std::shared_ptr<Node> root;
-
+        std::vector<Node*> getTreeNodes();
+        std::vector<Node*> getTreeNodes(Node* node);
     public:
-
         void reset();
         TaskStatus tick();
-
+        void print();
     };
 }
 
