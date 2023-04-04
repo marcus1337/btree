@@ -1,12 +1,12 @@
-#include "btree/CompositeNode.h"
+#include "btree/Composite.h"
 
 using namespace bt;
 
-void CompositeNode::addChild(std::shared_ptr<Node> node) {
+void Composite::addChild(std::shared_ptr<Node> node) {
     children.push_back(node);
 }
 
-std::vector<Node*> CompositeNode::getChildren() const {
+std::vector<Node*> Composite::getChildren() const {
     std::vector<Node*> nodes;
     for (std::shared_ptr<Node> child : children) {
         nodes.push_back(child.get());

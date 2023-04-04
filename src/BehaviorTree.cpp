@@ -1,49 +1,58 @@
 #include "BehaviorTree.h"
 #include <iostream>
-#include <queue>
+#include "btree/Composite.h"
+#include <numeric>
 
 using namespace bt;
 
+BehaviorTree::BehaviorTree() {
+    root = std::shared_ptr<Composite>(new Sequence());
+}
+
+std::shared_ptr<Composite> BehaviorTree::getRoot() {
+    return root;
+}
+
 void BehaviorTree::reset() {
-    for (Node* node : getTreeNodes()) {
+    for (Node* node : getNodes()) {
         node->setTicked(false);
     }
 }
 
 TaskStatus BehaviorTree::tick() {
-    if (root != nullptr)
-        return root->statefulTick();
-    else
-        return TaskStatus::FAIL;
+    return root->statefulTick();
 }
 
-std::vector<Node*> BehaviorTree::getTreeNodes(Node* node) {
+std::vector<Node*> BehaviorTree::getNodes() {
     std::vector<Node*> nodes;
-    nodes.push_back(node);
-    for (Node* child : node->getChildren()) {
-        auto childNodes = getTreeNodes(child);
-        nodes.insert(nodes.end(), childNodes.begin(), childNodes.end());
-    }
+    std::function<void(Node*)> addNode = [&](Node* node) {
+        nodes.push_back(node);
+        auto children = node->getChildren();
+        std::for_each(children.begin(), children.end(), addNode);
+    };
+    addNode(root.get());
     return nodes;
 }
 
-std::vector<Node*> BehaviorTree::getTreeNodes() {
-    if (root == nullptr)
-        return {};
-    return getTreeNodes(root.get());
+std::queue<std::pair<int, Node*>> BehaviorTree::getNodesBFS() {
+    std::queue<std::pair<int, Node*>> bfsQueue;
+    bfsQueue.push({ 0, root.get() });
+    while (!bfsQueue.empty()) {
+        auto [depth, node] = bfsQueue.front();
+        bfsQueue.pop();
+        for (Node* child : node->getChildren()) {
+            bfsQueue.push({ depth + 1, child });
+        }
+    }
+    return bfsQueue;
 }
 
 void BehaviorTree::print() {
     std::cout << "Behavior Tree:\n";
     std::cout << "================\n";
-
-    if (root == nullptr) {
-        std::cout << "Empty\n";
-        return;
-    }
-
-    std::queue<std::pair<int, Node*>> bfsQueue;
-    bfsQueue.push({ 0, root.get() });
+    std::queue<std::pair<int, Node*>> bfsQueue = getNodesBFS();
+    std::cout << "Size: " << bfsQueue.size() << "\n";
+    std::cout << "Size: " << getNodes().size() << "\n";
 
     while (!bfsQueue.empty()) {
         auto [depth, node] = bfsQueue.front();
@@ -53,10 +62,6 @@ void BehaviorTree::print() {
             std::cout << " (" << (int)node->getStatus() << ")";
         }
         std::cout << "\t";
-
-        for (Node* child : node->getChildren()) {
-            bfsQueue.push({ depth + 1, child });
-        }
         if (!bfsQueue.empty() && bfsQueue.front().first > depth) {
             std::cout << "\n";
         }

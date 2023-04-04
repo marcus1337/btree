@@ -7,7 +7,7 @@
 #include <memory>
 
 namespace bt {
-    class CompositeNode : public Node {
+    class Composite : public Node {
     protected:
         std::vector<std::shared_ptr<Node>> children;
     public:
@@ -16,12 +16,12 @@ namespace bt {
         virtual std::vector<Node*> getChildren() const override;
     };
 
-    class Selector : public CompositeNode {
+    class Selector : public Composite {
         virtual TaskStatus tick();
         virtual NodeType getType() const override;
     };
 
-    class Sequence : public CompositeNode {
+    class Sequence : public Composite {
         virtual TaskStatus tick();
         virtual NodeType getType() const override;
     };

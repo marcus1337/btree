@@ -27,3 +27,4 @@ std::string Node::getName() const {
 void Node::setTicked(bool _ticked) {
     ticked = _ticked;
 }
+
