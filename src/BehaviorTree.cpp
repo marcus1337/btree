@@ -23,6 +23,19 @@ TaskStatus BehaviorTree::tick() {
     return root->statefulTick();
 }
 
+std::vector<std::pair<int, Node*>> BehaviorTree::getNodesDFS() {
+    std::vector<std::pair<int, Node*>> nodes;
+    std::function<void(std::pair<int, Node*>)> addNode = [&](std::pair<int, Node*> depthAndNode) {
+        nodes.push_back(depthAndNode);
+        auto [depth, node] = depthAndNode;
+        for (Node* child : node->getChildren()) {
+            addNode({ depth + 1, child });
+        }
+    };
+    addNode({0, root.get() });
+    return nodes;
+}
+
 std::vector<Node*> BehaviorTree::getNodes() {
     std::vector<Node*> nodes;
     std::function<void(Node*)> addNode = [&](Node* node) {
@@ -34,36 +47,34 @@ std::vector<Node*> BehaviorTree::getNodes() {
     return nodes;
 }
 
-std::queue<std::pair<int, Node*>> BehaviorTree::getNodesBFS() {
+std::vector<std::pair<int, Node*>> BehaviorTree::getNodesTickOrder() {
+    std::vector<std::pair<int, Node*>> orderedNodes;
     std::queue<std::pair<int, Node*>> bfsQueue;
     bfsQueue.push({ 0, root.get() });
     while (!bfsQueue.empty()) {
         auto [depth, node] = bfsQueue.front();
+        orderedNodes.push_back({ depth, node });
         bfsQueue.pop();
         for (Node* child : node->getChildren()) {
             bfsQueue.push({ depth + 1, child });
         }
     }
-    return bfsQueue;
+    return orderedNodes;
 }
 
 void BehaviorTree::print() {
-    std::cout << "Behavior Tree:\n";
-    std::cout << "================\n";
-    std::queue<std::pair<int, Node*>> bfsQueue = getNodesBFS();
-    std::cout << "Size: " << bfsQueue.size() << "\n";
-    std::cout << "Size: " << getNodes().size() << "\n";
-
-    while (!bfsQueue.empty()) {
-        auto [depth, node] = bfsQueue.front();
-        bfsQueue.pop();
-        std::cout << "Node: " << node->getName();
-        if (node->isTicked()) {
-            std::cout << " (" << (int)node->getStatus() << ")";
+    for (auto [depth, node] : getNodesDFS()) {
+        for (int i = 0; i < depth; i++) {
+            std::cout << "   ";
         }
-        std::cout << "\t";
-        if (!bfsQueue.empty() && bfsQueue.front().first > depth) {
-            std::cout << "\n";
+        if (node->getType() == NodeType::CONDITION) {
+            std::cout << "(" << node->getName() << ")\n";
+        }
+        else if (node->getType() == NodeType::ACTION) {
+            std::cout << "<" << node->getName() << ">\n";
+        }
+        else {
+            std::cout << "[" << node->getName() << "]\n";
         }
     }
 }

@@ -10,13 +10,14 @@ namespace bt {
     class BehaviorTree {
         std::shared_ptr<Composite> root;
         std::vector<Node*> getNodes();
+        std::vector<std::pair<int, Node*>> getNodesDFS();
     public:
         BehaviorTree();
         void reset();
         TaskStatus tick();
         void print();
         std::shared_ptr<Composite> getRoot();
-        std::queue<std::pair<int, Node*>> getNodesBFS();
+        std::vector<std::pair<int, Node*>> getNodesTickOrder();
     };
 }
 
