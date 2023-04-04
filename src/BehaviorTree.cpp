@@ -47,21 +47,6 @@ std::vector<Node*> BehaviorTree::getNodes() {
     return nodes;
 }
 
-std::vector<std::pair<int, Node*>> BehaviorTree::getNodesTickOrder() {
-    std::vector<std::pair<int, Node*>> orderedNodes;
-    std::queue<std::pair<int, Node*>> bfsQueue;
-    bfsQueue.push({ 0, root.get() });
-    while (!bfsQueue.empty()) {
-        auto [depth, node] = bfsQueue.front();
-        orderedNodes.push_back({ depth, node });
-        bfsQueue.pop();
-        for (Node* child : node->getChildren()) {
-            bfsQueue.push({ depth + 1, child });
-        }
-    }
-    return orderedNodes;
-}
-
 void BehaviorTree::print() {
     for (auto [depth, node] : getNodesDFS()) {
         for (int i = 0; i < depth; i++) {

@@ -17,7 +17,6 @@ namespace bt {
         TaskStatus tick();
         void print();
         std::shared_ptr<Composite> getRoot();
-        std::vector<std::pair<int, Node*>> getNodesTickOrder();
     };
 }
 

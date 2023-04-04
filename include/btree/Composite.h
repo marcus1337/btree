@@ -13,7 +13,10 @@ namespace bt {
     public:
         virtual TaskStatus tick() = 0;
         void addChild(std::shared_ptr<Node> node);
+        void insertChild(std::shared_ptr<Node> node, int index);
+        void removeChild(int index);
         virtual std::vector<Node*> getChildren() const override;
+        int getNumChildren() const;
     };
 
     class Selector : public Composite {
