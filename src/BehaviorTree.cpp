@@ -21,6 +21,20 @@ std::shared_ptr<Composite> BehaviorTree::getRoot() const {
     return root;
 }
 
+std::vector<std::pair<int, Composite*>> BehaviorTree::getCompositeLeafIndices() const {
+    std::vector<std::pair<int, Composite*>> leafIndicePairs;
+    for (Composite* composite : getComposites()) {
+        auto leaves = composite->getChildren();
+        for (int i = 0; i < composite->getNumChildren(); i++) {
+            auto leaf = dynamic_cast<Composite*>(leaves[i]);
+            if (leaf != nullptr) {
+                leafIndicePairs.push_back({ i, composite });
+            }
+        }
+    }
+    return leafIndicePairs;
+}
+
 std::vector<Composite*> BehaviorTree::getComposites() const {
     std::vector<Composite*> result;
     for (Node* child : getNodes()) {
@@ -40,7 +54,7 @@ void BehaviorTree::reset() {
 
 TaskStatus BehaviorTree::tick() {
     auto status = root->statefulTick();
-    if(status != TaskStatus::RUNNING)
+    if (status != TaskStatus::RUNNING)
         reset();
     return status;
 }
@@ -58,7 +72,7 @@ std::vector<std::pair<int, Node*>> BehaviorTree::getNodesDFS() const {
             addNode({ depth + 1, child });
         }
     };
-    addNode({0, root.get() });
+    addNode({ 0, root.get() });
     return nodes;
 }
 

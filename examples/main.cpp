@@ -1,5 +1,6 @@
 #include "BehaviorTree.h"
 #include "BehaviorTreeBuilder.h"
+#include "BehaviorTreeMutater.h"
 #include <string>
 #include <iostream>
 #include "btree/TaskStatus.h"
@@ -16,10 +17,20 @@ int main(int argc, char* argv[]) {
             .Action("Act3", []() {return bt::TaskStatus::SUCCESS; })
             .popComposite()
         .Action("Act4", []() {return bt::TaskStatus::SUCCESS; })
+        .Selector()
+            .Action("Act5", []() {return bt::TaskStatus::SUCCESS; })
+            .Action("Act6", []() {return bt::TaskStatus::SUCCESS; })
+            .popComposite()
         .build();
 
     tree.print();
     std::cout << "Num composites: " << tree.getComposites().size() << "\n";
+
+
+    std::cout << "-------------- Mutation ----------------\n";
+    bt::BehaviorTreeMutater mutater(tree);
+    auto tree2 = mutater.mutate();
+    tree2.print();
 
     return 0;
 }

@@ -19,6 +19,7 @@ namespace bt {
         void print() const;
         std::shared_ptr<Composite> getRoot() const;
         std::vector<Composite*> getComposites() const;
+        std::vector<std::pair<int, Composite*>> getCompositeLeafIndices() const; //returns detachable subbranches
         BehaviorTree clone() const;
     };
 }
