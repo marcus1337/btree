@@ -90,23 +90,27 @@ std::vector<Node*> BehaviorTree::getNodes() const {
     return nodes;
 }
 
-void BehaviorTree::print(int depth, Node* node) const {
-    std::string name = node->getName();
-    std::array<std::string,2> delimiters  = { "[", "]" };
-    using enum bt::NodeType;
-    if (node->getType() == SELECTOR)
-        name = "?";
-    if (node->getType() == SEQUENCE)
-        name = "->";
-    if (node->getType() == ACTION)
-        delimiters = { "<",">" };
-    if (node->getType() == CONDITION)
-        delimiters = { "(",")" };
-    std::cout << std::setw(depth*3) << delimiters.front() << name << delimiters.back() << "\n";
+std::string BehaviorTree::getName(Node* node) const {
+    if (node->getType() == bt::NodeType::SEQUENCE)
+        return "->";
+    if (node->getType() == bt::NodeType::SELECTOR)
+        return "?";
+    else
+        return node->getName();
+}
+
+std::array<std::string, 2> BehaviorTree::getDelimiters(Node* node) const {
+    if (node->getType() == bt::NodeType::ACTION)
+        return { "<",">" };
+    if (node->getType() == bt::NodeType::CONDITION)
+        return { "(",")" };
+    else
+        return { "[", "]" };
 }
 
 void BehaviorTree::print() const {
     for (auto [depth, node] : getNodesDFS()) {
-        print(depth, node);
+        auto delimiters = getDelimiters(node);
+        std::cout << std::setw(depth * 3) << delimiters.front() << getName(node) << delimiters.back() << "\n";
     }
 }

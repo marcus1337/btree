@@ -5,12 +5,15 @@
 #include "btree/Composite.h"
 #include "btree/Task.h"
 #include <queue>
+#include <array>
 
 namespace bt {
     class BehaviorTree {
         std::shared_ptr<Composite> root;
         std::vector<Node*> getNodes() const;
-        void print(int depth, Node* node) const;
+        std::string getName(Node* node) const;
+        std::array<std::string, 2> getDelimiters(Node* node) const;
+
     public:
         BehaviorTree();
         void reset();
