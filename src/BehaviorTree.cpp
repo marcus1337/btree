@@ -2,6 +2,9 @@
 #include <iostream>
 #include "btree/Composite.h"
 #include <numeric>
+#include <iomanip>
+#include <tuple>
+#include <array>
 
 using namespace bt;
 
@@ -25,7 +28,7 @@ std::vector<std::pair<int, Composite*>> BehaviorTree::getCompositeLeafIndices() 
     std::vector<std::pair<int, Composite*>> leafIndicePairs;
     for (Composite* composite : getComposites()) {
         auto leaves = composite->getChildren();
-        for (int i = 0; i < composite->getNumChildren(); i++) {
+        for (int i = 0; i < leaves.size(); i++) {
             auto leaf = dynamic_cast<Composite*>(leaves[i]);
             if (leaf != nullptr) {
                 leafIndicePairs.push_back({ i, composite });
@@ -87,19 +90,23 @@ std::vector<Node*> BehaviorTree::getNodes() const {
     return nodes;
 }
 
+void BehaviorTree::print(int depth, Node* node) const {
+    std::string name = node->getName();
+    std::array<std::string,2> delimiters  = { "[", "]" };
+    using enum bt::NodeType;
+    if (node->getType() == SELECTOR)
+        name = "?";
+    if (node->getType() == SEQUENCE)
+        name = "->";
+    if (node->getType() == ACTION)
+        delimiters = { "<",">" };
+    if (node->getType() == CONDITION)
+        delimiters = { "(",")" };
+    std::cout << std::setw(depth*3) << delimiters.front() << name << delimiters.back() << "\n";
+}
+
 void BehaviorTree::print() const {
     for (auto [depth, node] : getNodesDFS()) {
-        for (int i = 0; i < depth; i++) {
-            std::cout << "   ";
-        }
-        if (node->getType() == NodeType::CONDITION) {
-            std::cout << "(" << node->getName() << ")\n";
-        }
-        else if (node->getType() == NodeType::ACTION) {
-            std::cout << "<" << node->getName() << ">\n";
-        }
-        else {
-            std::cout << "[" << node->getName() << "]\n";
-        }
+        print(depth, node);
     }
 }

@@ -30,10 +30,6 @@ std::vector<Node*> Composite::getChildren() const {
     return nodes;
 }
 
-int Composite::getNumChildren() const {
-    return children.size();
-}
-
 TaskStatus Selector::tick() {
     for (int i = 0; i < children.size(); i++) {
         auto result = children[i]->statefulTick();
