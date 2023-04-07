@@ -10,13 +10,13 @@ BehaviorTreeBuilder::BehaviorTreeBuilder() {
 
 void BehaviorTreeBuilder::addComposite(std::shared_ptr<Composite> composite) {
     Composite* parent = composites.top();
-    parent->addChild(composite);
+    parent->addLeaf(composite);
     composites.push(composite.get());
 }
 
 void BehaviorTreeBuilder::addTask(std::shared_ptr<Task> task) {
     Composite* parent = composites.top();
-    parent->addChild(task);
+    parent->addLeaf(task);
 }
 
 BehaviorTreeBuilder& BehaviorTreeBuilder::Condition(std::string name, std::function<bool()> condition) {

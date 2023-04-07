@@ -17,7 +17,7 @@ namespace bt {
         Task(std::string name, std::function<TaskStatus()> action);
         virtual std::string getName() const override;
         virtual TaskStatus tick() override;
-        virtual std::vector<Node*> getChildren() const override;
+        virtual std::vector<Node*> getLeaves() const override;
         virtual NodeType getType() const override;
         virtual std::shared_ptr<Node> clone() const override;
     };

@@ -14,8 +14,8 @@ BehaviorTree::BehaviorTree() {
 
 BehaviorTree BehaviorTree::clone() const {
     BehaviorTree tree;
-    for (const auto& child : root->getChildren()) {
-        tree.getRoot()->addChild(child->clone());
+    for (const auto& child : root->getLeaves()) {
+        tree.getRoot()->addLeaf(child->clone());
     }
     return tree;
 }
@@ -27,7 +27,7 @@ std::shared_ptr<Composite> BehaviorTree::getRoot() const {
 std::vector<std::pair<int, Composite*>> BehaviorTree::getCompositeLeafIndices() const {
     std::vector<std::pair<int, Composite*>> leafIndicePairs;
     for (Composite* composite : getComposites()) {
-        auto leaves = composite->getChildren();
+        auto leaves = composite->getLeaves();
         for (int i = 0; i < leaves.size(); i++) {
             auto leaf = dynamic_cast<Composite*>(leaves[i]);
             if (leaf != nullptr) {
@@ -68,14 +68,13 @@ TaskStatus BehaviorTree::statefulTick() {
 
 std::vector<std::pair<int, Node*>> BehaviorTree::getNodesDFS() const {
     std::vector<std::pair<int, Node*>> nodes;
-    std::function<void(std::pair<int, Node*>)> addNode = [&](std::pair<int, Node*> depthAndNode) {
-        nodes.push_back(depthAndNode);
-        auto [depth, node] = depthAndNode;
-        for (Node* child : node->getChildren()) {
-            addNode({ depth + 1, child });
+    std::function<void(int, Node*)> addNode = [&](int depth, Node* node) {
+        nodes.push_back({depth, node});
+        for (Node* leaf : node->getLeaves()) {
+            addNode(depth + 1, leaf);
         }
     };
-    addNode({ 0, root.get() });
+    addNode(0, root.get());
     return nodes;
 }
 
@@ -83,7 +82,7 @@ std::vector<Node*> BehaviorTree::getNodes() const {
     std::vector<Node*> nodes;
     std::function<void(Node*)> addNode = [&](Node* node) {
         nodes.push_back(node);
-        auto children = node->getChildren();
+        auto children = node->getLeaves();
         std::for_each(children.begin(), children.end(), addNode);
     };
     addNode(root.get());
@@ -108,9 +107,13 @@ std::array<std::string, 2> BehaviorTree::getDelimiters(Node* node) const {
         return { "[", "]" };
 }
 
+std::string BehaviorTree::stringifyNode(Node* node) const {
+    auto delimiters = getDelimiters(node);
+    return delimiters.front() + getName(node) + delimiters.back();
+}
+
 void BehaviorTree::print() const {
     for (auto [depth, node] : getNodesDFS()) {
-        auto delimiters = getDelimiters(node);
-        std::cout << std::setw(depth * 3) << delimiters.front() << getName(node) << delimiters.back() << "\n";
+        std::cout << std::setw(depth * 5) << stringifyNode(node) << "\n";
     }
 }

@@ -2,37 +2,37 @@
 
 using namespace bt;
 
-void Composite::addChild(std::shared_ptr<Node> node) {
-    children.push_back(node);
+void Composite::addLeaf(std::shared_ptr<Node> node) {
+    leaves.push_back(node);
 }
 
-void Composite::insertChild(std::shared_ptr<Node> node, int index) {
-    children.insert(children.begin() + index, node);
+void Composite::insertLeaf(std::shared_ptr<Node> node, int index) {
+    leaves.insert(leaves.begin() + index, node);
 }
 
-void Composite::removeChild(int index) {
-    children.erase(children.begin() + index);
+void Composite::removeLeaf(int index) {
+    leaves.erase(leaves.begin() + index);
 }
 
-void Composite::replaceChild(std::shared_ptr<Node> node, int index) {
-    children[index] = node;
+void Composite::replaceLeaf(std::shared_ptr<Node> node, int index) {
+    leaves[index] = node;
 }
 
-void Composite::swapChildren(int index1, int index2) {
-    std::swap(children[index1], children[index2]);
+void Composite::swapLeaves(int index1, int index2) {
+    std::swap(leaves[index1], leaves[index2]);
 }
 
-std::vector<Node*> Composite::getChildren() const {
+std::vector<Node*> Composite::getLeaves() const {
     std::vector<Node*> nodes;
-    for (std::shared_ptr<Node> child : children) {
+    for (std::shared_ptr<Node> child : leaves) {
         nodes.push_back(child.get());
     }
     return nodes;
 }
 
 TaskStatus Selector::tick() {
-    for (int i = 0; i < children.size(); i++) {
-        auto result = children[i]->statefulTick();
+    for (int i = 0; i < leaves.size(); i++) {
+        auto result = leaves[i]->statefulTick();
         if (result == TaskStatus::RUNNING) {
             return result;
         }
@@ -44,8 +44,8 @@ TaskStatus Selector::tick() {
 }
 
 TaskStatus Sequence::tick() {
-    for (int i = 0; i < children.size(); i++) {
-        auto result = children[i]->statefulTick();
+    for (int i = 0; i < leaves.size(); i++) {
+        auto result = leaves[i]->statefulTick();
         if (result == TaskStatus::RUNNING) {
             return result;
         }
@@ -66,16 +66,16 @@ NodeType Selector::getType() const {
 
 std::shared_ptr<Node> Sequence::clone() const {
     std::shared_ptr<Sequence> node = std::make_shared<Sequence>();
-    for (const auto& child : getChildren()) {
-        node->addChild(child->clone());
+    for (const auto& child : getLeaves()) {
+        node->addLeaf(child->clone());
     }
     return node;
 }
 
 std::shared_ptr<Node> Selector::clone() const {
     std::shared_ptr<Selector> node = std::make_shared<Selector>();
-    for (const auto& child : getChildren()) {
-        node->addChild(child->clone());
+    for (const auto& child : getLeaves()) {
+        node->addLeaf(child->clone());
     }
     return node;
 }

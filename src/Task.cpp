@@ -29,7 +29,7 @@ bool Task::isAction() const {
     return static_cast<bool>(action);
 }
 
-std::vector<Node*> Task::getChildren() const {
+std::vector<Node*> Task::getLeaves() const {
     return {};
 }
 

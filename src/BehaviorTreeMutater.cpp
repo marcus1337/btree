@@ -28,10 +28,10 @@ void BehaviorTreeMutater::swapSubtrees(int i1, int i2) {
     int leafIndex2 = subbranch2.first;
     auto root1 = subbranch1.second;
     auto root2 = subbranch2.second;
-    auto leaf1 = root1->getChildren()[leafIndex1]->clone();
-    auto leaf2 = root2->getChildren()[leafIndex2]->clone();
-    root1->replaceChild(leaf2, leafIndex1);
-    root2->replaceChild(leaf1, leafIndex2);
+    auto leaf1 = root1->getLeaves()[leafIndex1]->clone();
+    auto leaf2 = root2->getLeaves()[leafIndex2]->clone();
+    root1->replaceLeaf(leaf2, leafIndex1);
+    root2->replaceLeaf(leaf1, leafIndex2);
 }
 
 void BehaviorTreeMutater::swapMutate() {

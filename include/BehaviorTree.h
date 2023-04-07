@@ -25,6 +25,7 @@ namespace bt {
         std::vector<Composite*> getComposites() const;
         std::vector<std::pair<int, Composite*>> getCompositeLeafIndices() const; //returns detachable subbranches
         BehaviorTree clone() const;
+        std::string stringifyNode(Node* node) const;
     };
 }
 

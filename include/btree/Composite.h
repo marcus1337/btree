@@ -9,15 +9,15 @@
 namespace bt {
     class Composite : public Node {
     protected:
-        std::vector<std::shared_ptr<Node>> children;
+        std::vector<std::shared_ptr<Node>> leaves;
     public:
         virtual TaskStatus tick() = 0;
-        void addChild(std::shared_ptr<Node> node);
-        void insertChild(std::shared_ptr<Node> node, int index);
-        void removeChild(int index);
-        void replaceChild(std::shared_ptr<Node> node, int index);
-        void swapChildren(int index1, int index2);
-        virtual std::vector<Node*> getChildren() const override;
+        void addLeaf(std::shared_ptr<Node> node);
+        void insertLeaf(std::shared_ptr<Node> node, int index);
+        void removeLeaf(int index);
+        void replaceLeaf(std::shared_ptr<Node> node, int index);
+        void swapLeaves(int index1, int index2);
+        virtual std::vector<Node*> getLeaves() const override;
     };
 
     class Selector : public Composite {
